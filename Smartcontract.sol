@@ -108,7 +108,7 @@ function access_control_policy(address requester)internal returns (bool) { // th
     else revert;
 }
 
-function Access_Request(string resource, uint256 time) returns (bool){ // the requester call this function to get access token
+function Access_Request(string resource) returns (bool){ // the requester call this function to get access token
     
     if(white_list[msg.sender]==role.Babysitter || white_list[msg.sender]==role.Ressource_Owner){
         access_control_policy(msg.sender);
