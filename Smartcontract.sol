@@ -42,19 +42,20 @@ contract ERC20{
 contract Acces_control is ERC20
 {
  
-uint256 time_start;
-uint256 time_end;
+uint256 time_start; // access start time
+uint256 time_end; // access end time
 
-string location;
-mapping(address=>role) white_list;
-uint256 totalSupply;
-address ad_device_owner;
+string location;// device location exp "baby room"
+mapping(address=>role) white_list;// the whitelisted users
+uint256 totalSupply; // token total supply
+address ad_device_owner; //device owner
+
 enum role{
     Ressource_Owner,Babysitter,Service_Provider
 }
 
 
-function Acces_control(string device_location,uint256 access_time_start,uint256 access_time_end,uint256 initialSupply){
+function Acces_control(string device_location,uint256 access_time_start,uint256 access_time_end,uint256 initialSupply){ // the constructor initiated the total supply of token access and intial access control parameters
     
         totalSupply = initialSupply * 10 ** uint256(decimals); 
         ad_device_owner=msg.sender;
@@ -67,7 +68,7 @@ function Acces_control(string device_location,uint256 access_time_start,uint256 
 
 
  
-   modifier only_ressource_owner()
+   modifier only_ressource_owner() // this modifier restricts the functions execution to the ressource owner
     {
         require(white_list[msg.sender]==role.Ressource_Owner);//check if the request comes from the ressource owner
         _;
@@ -76,7 +77,7 @@ function Acces_control(string device_location,uint256 access_time_start,uint256 
 
 event allow_access_event(bool allowed);
 
-    function setRole (address ad, uint256  roleID) only_ressource_owner
+    function setRole (address ad, uint256  roleID) only_ressource_owner // add new whitelisted user or define the role
     {
 
         if (roleID==0)
@@ -89,13 +90,13 @@ event allow_access_event(bool allowed);
     }
 
  
-    function getrole(address ad) only_ressource_owner view returns (role) 
+    function getrole(address ad) only_ressource_owner view returns (role) // get whitelisted users' roles
     {
         return white_list[ad];
     }
 
 
-function access_control_policy(address requester)internal returns (bool) {
+function access_control_policy(address requester)internal returns (bool) { // this function represents an example of access control policy
     
     if((keccak256(location)==keccak256("babyroom")) && (now<=time_end) && (now>time_start))
     
@@ -107,7 +108,7 @@ function access_control_policy(address requester)internal returns (bool) {
     else revert;
 }
 
-function Access_Request(string resource, uint256 time) returns (bool){
+function Access_Request(string resource, uint256 time) returns (bool){ // the requester call this function to get access token
     
     if(white_list[msg.sender]==role.Babysitter || white_list[msg.sender]==role.Ressource_Owner){
         access_control_policy(msg.sender);
@@ -119,7 +120,7 @@ function Access_Request(string resource, uint256 time) returns (bool){
     
 }
 
-function burn_token(uint256 amount){// token are sent back to the contract after the access to the object
+function burn_token(uint256 amount){// token is sent back to the contract after the access to the object
     _transfer(msg.sender,ad_device_owner,amount);
 }
 
