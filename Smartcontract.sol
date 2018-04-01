@@ -6,7 +6,7 @@ contract ERC20{
     string public symbol="FTK";
     uint8 public decimals = 18;
     uint256 public totalSupply;
-
+    address admin;
     mapping (address => uint256) public balanceOf;
  
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -15,7 +15,7 @@ contract ERC20{
 
 
     function transfer(address _to, uint256 _value) public {
-        _transfer(msg.sender, this, _value);
+        _transfer( admin, msg.sender, _value);
     }
 
   
@@ -42,13 +42,13 @@ contract ERC20{
 contract Acces_control is ERC20
 {
  
-uint256 time_start; // access start time
-uint256 time_end; // access end time
+uint256 public time_start; // access start time
+uint256 public time_end; // access end time
+uint256 public now_=now; // access end time
 
 string location;// device location exp "baby room"
 mapping(address=>role) white_list;// the whitelisted users
-uint256 totalSupply; // token total supply
-address ad_device_owner; //device owner
+address public ad_device_owner; //device owner
 
 enum role{
     Ressource_Owner,Babysitter,Service_Provider
@@ -59,11 +59,13 @@ function Acces_control(string device_location,uint256 access_time_start,uint256 
     
         totalSupply = initialSupply * 10 ** uint256(decimals); 
         ad_device_owner=msg.sender;
+        admin=ad_device_owner;
         white_list[ad_device_owner]=role.Ressource_Owner; 
         time_start=access_time_start;
         time_end=access_time_end;
         location=device_location;
         balanceOf[ad_device_owner] = totalSupply;
+       
 }    
 
 
@@ -96,9 +98,9 @@ event allow_access_event(bool allowed);
     }
 
 
-function access_control_policy(address requester)internal returns (bool) { // this function represents an example of access control policy
+function access_control_policy(address requester, string location_)public returns (bool) { // this function represents an example of access control policy
     
-    if((keccak256(location)==keccak256("babyroom")) && (now<=time_end) && (now>time_start))
+    if(keccak256(location_)==keccak256("babyroom")&& now<time_end && now>time_start)// 
     
     {
                 transfer(requester,1);// transfer 1 token to the requester 
@@ -108,10 +110,11 @@ function access_control_policy(address requester)internal returns (bool) { // th
     else revert;
 }
 
-function Access_Request(string resource) returns (bool){ // the requester call this function to get access token
+function Access_Request(string ressource_, string location) returns (bool){ // the requester call this function to get access token
     
-    if(white_list[msg.sender]==role.Babysitter || white_list[msg.sender]==role.Ressource_Owner){
-        access_control_policy(msg.sender);
+    if(keccak256(ressource_)==keccak256("raspberry") && white_list[msg.sender]==role.Babysitter)//&& 
+    {
+        access_control_policy(msg.sender, location);
     
     return true;
     }
