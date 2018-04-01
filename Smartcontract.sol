@@ -100,7 +100,7 @@ event allow_access_event(bool allowed);
 
 function access_control_policy(address requester, string location_)public returns (bool) { // this function represents an example of access control policy
     
-    if(keccak256(location_)==keccak256("babyroom")&& now<time_end && now>time_start)// 
+    if(keccak256(location_)==keccak256("babyroom")&& now<time_end && now>time_start)
     
     {
                 transfer(requester,1);// transfer 1 token to the requester 
@@ -112,7 +112,7 @@ function access_control_policy(address requester, string location_)public return
 
 function Access_Request(string ressource_, string location) returns (bool){ // the requester call this function to get access token
     
-    if(keccak256(ressource_)==keccak256("raspberry") && white_list[msg.sender]==role.Babysitter)//&& 
+    if(keccak256(ressource_)==keccak256("raspberry") && white_list[msg.sender]==role.Babysitter)
     {
         access_control_policy(msg.sender, location);
     
