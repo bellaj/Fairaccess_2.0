@@ -1,5 +1,5 @@
 # Fairaccess_2.0
-porting FairAccess protocol to Ethereum Blockchain. FairAccess is a blockhain based access control framework for IOT. the present repo is a proof of concept of the imlpementation of an access control policy in an Ethereum smart contract. the paper explaining the context and the alchemy behind this framework will be published soon. 
+porting FairAccess protocol to Ethereum Blockchain. FairAccess is a blockhain based access control framework for IOT. the present repo is a proof of concept of the imlpementation of an access control policy as an Ethereum smart contract. the paper explaining the context and the alchemy behind this framework will be published soon. 
 
 Please get in touch with the authors to know more about the project. this repos offer only a limited imlplementation using ethereum smart contract without offering the application interacting with it or the translator of access control politicy into Smart contracts.
 
